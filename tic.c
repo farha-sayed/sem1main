@@ -117,7 +117,7 @@ int peek (int row, int col)
 // NOW IT IS YOUR TURN, YOU CAN DEFINE ANY OTHER GLOBAL VARIABLES YOU MAY NEED IN YOUR CODE BELOW THIS LINE
 
 
-
+int gs = 0;
 
 
 // END OF SECTION FOR DECLARRING ADDITIONAL GLOBAL VARIABLES
@@ -168,18 +168,23 @@ int newGame (int gridsize, int winlength)
 // There is one empty line after the grid to make it stand out from text after it
 void showGrid ()
 {
-printf("\n");
-printf("\t1 2 3");
-for(int a = 0; a<MaxGrid; a++)
+  printf("\n");
+printf("\t ");
+for(int j = 0; j< gs; j++)
 {
-  printf("a\t");
-  for(int b = 0; b<MaxGrid; b++)
+  printf("%i ", j);
+}
+printf("\n");
+for(int a1 = 0; a1<gs; a1++)
   {
-  printf("%c ",grid[a][b]);
-}
-printf("\n");
-}
-printf("\n");
+    printf("%i\t",a1);
+  for(int b1 = 0; b1<gs; b1++)
+    {
+        printf(" %c",grid[a1][b1]);
+    }
+  printf("\n");
+  }
+  printf("\n");
 }
 
 // The purpose of this function is to make a move by a player.
@@ -196,10 +201,14 @@ printf("\n");
 // my solution is 4 lines only
 int makeMove(int row, int col, char symbol)
 {
-  if(row<0||row>MaxGrid ||col<0||col>MaxGrid ||grid[row][col]!='.' || (symbol!='X'&&symbol!='O'))
+  if(row<0||row>MaxGrid||col<0||col>MaxGrid ||grid[row][col]!='.')
   return 0;
+  if (symbol=='X'||symbol=='O')
+  {
   grid[row][col] = symbol;
   return 1;
+}
+return 0;
 }
 
 // This function is used to check if the board is full, i.e. every location in the grid is filled with either X or O
@@ -207,14 +216,20 @@ int makeMove(int row, int col, char symbol)
 // my solution is 5 lines
 int boardIsFull()
 {
-  for(int a = 0; a<MaxGrid; a++)
+  int bif = 0;
+  for(int a2 = 0; a2<gs; a2++)
   {
-    for(int b = 0; b<MaxGrid; b++)
+    for(int b2 = 0; b2<gs; b2++)
     {
-      if(grid[a][b] == '.')
-      return 0;
+      if(grid[a2][b2] == '.')
+      {
+        bif = 1;
+        a2 = gs, b2 = gs;
+        return 0;
+      }
     }
   }
+  if(bif ==0)
   return 1;
 }
 
@@ -231,17 +246,17 @@ int checkHorizontal (char symbol, int length)
   if(length<0 || length>MaxGrid)
   return -1;
   int count = 0;
-	for(int a = 0; a<MaxGrid; a++)
+	for(int a3 = 0; a3<MaxGrid; a3++)
   {
-    for(int b = 0; b<MaxGrid; b++)
+    for(int b3 = 0; b3<MaxGrid; b3++)
     {
-    if(grid[a][b] == symbol)
+    if(grid[b3][a3] == symbol)
     {
       count++;
       if(count == length)
       return 1;
     }
-    if(grid[b][b] != symbol)
+    if(grid[a3][b3] != symbol)
     count = 0;
   }
   }
@@ -261,17 +276,17 @@ int checkVertical (char symbol, int length)
   if(length<0 || length>MaxGrid)
   return -1;
   int count = 0;
-	for(int a = 0; a<MaxGrid; a++)
+	for(int a4 = 0; a4<MaxGrid; a4++)
   {
-    for(int b = 0; b<MaxGrid; b++)
+    for(int b4= 0; b4<MaxGrid; b4++)
     {
-    if(grid[b][a] == symbol)
+    if(grid[a4][b4] == symbol)
     {
       count++;
       if(count == length)
       return 1;
     }
-    if(grid[b][b] != symbol)
+    if(grid[a4][b4] != symbol)
     count = 0;
   }
   }
@@ -295,21 +310,21 @@ int checkDiagonals (char symbol, int length)
 
 
 //attempt4
-int a = 0;
-for(int b = 0; b<MaxGrid; b++)
+int a5 = 0;
+for(int b5 = 0; b5<MaxGrid; b5++)
 {
-  while(count<winlength)
+  while(count<length)
   {
-  a = 0;
-  while(a<MaxGrid)
+  a5 = 0;
+  while(a5<MaxGrid)
   {
-    if(grid[a][b] == symbol)
+    if(grid[a5][b5] == symbol)
     count++;
-    if(grid[a][b] != symbol)
+    if(grid[a5][b5] != symbol)
     count = 0;
-    a++;
+    a5++;
   }
-  if(count == winlength)
+  if(count == length)
   return 1;
   }
 }
@@ -361,21 +376,21 @@ int checkAntiDiagonals (char symbol, int length)  //based on attempt 4
   if(length<0 || length>MaxGrid)
   return -1;
   int count = 0;
-  int a = 0;
-  for(int b = 0; b<MaxGrid; b++)
+  int a6 = 0;
+  for(int b6 = 0; b6<MaxGrid; b6++)
   {
-    while(count<winlength)
+    while(count<length)
     {
-    a = 0;
-    while(a<MaxGrid)
+    a6 = 0;
+    while(a6<MaxGrid)
     {
-      if(grid[b][a] == symbol)
+      if(grid[b6][a6] == symbol)
       count++;
-      if(grid[b][a] != symbol)
+      if(grid[b6][a6] != symbol)
       count = 0;
-      a++;
+      a6++;
     }
-    if(count == winlength)
+    if(count == length)
     return 1;
     }
   }
@@ -419,65 +434,132 @@ int playerHasWon (char symbol , int length)
 // It returns -1 if any of the parameters have an invalid value.
 int effPlayerHasWon (int row, int col, char symbol , int length)
 {
-  if(row<0||row>MaxGrid||col<0||col>MaxGrid||symbol!='X'||symbol!='O'||length<0||length>MaxGrid)
+  int u = 0, w = 0;
+  if(row<0||row>gs||col<0||col>gs||length<3||length>gs)
+  return -1;
+  if(symbol!= 'X'&&symbol!='O')
   return -1;
   int f = 0; //check variable
-
-
-//checkhorizontal
-
 int count = 0;
-for(int a = 0; a<MaxGrid; a++)
-{
-  for(int b = 0; b<MaxGrid; b++)
+int ch = 0, cv = 0; //count horizontal and count vertical
+int cd = 0;
+int cad = 0;
+
+ch = 0;
+cv = 0;
+
+//attempt2
+
+//checking horizontal
+for(int m = 0; m<gs; m++)
   {
-      if(check(row,col,symbol) == 1))
+    if(check(row,m,symbol)==1)
+    {
+    ch++;
+if(ch == length)
+return 1;
+  }
+    else
+    ch = 0;
+}
+//checking vertical
+for(int n = 0; n<gs; n++)
+{
+  if(check(n,col,symbol)==1)
+    {
+        cv++;
+        if(cv == length)
+        return 1;
+      }
+  else
+  cv = 0;
+}
+//checking diagonals
+while(u<gs)
+{
+for(int o = 0,u = 0; o<gs; o++)
+{
+  if(check(o,u,symbol)==1)
+{
+
+  cd++;
+  if(cd == length)
+  return 1;
+}
+else
+cd = 0;
+u++;
+}
+}
+//checking antidiagonals
+while(w>0)
+{
+for(int v = 0,w = gs; v<gs; v++)
+{
+  if(check(v,w,symbol)==1)
+{
+  cad++;
+  if(cad == length)
+  return 1;
+}
+else
+cad = 0;
+w--;
+}
+}
+
+if(cd ==length || ch == length || cv == length || cad == length)
+return 1;
+return 0;
+}
+
+
+
+
+/**
+//attempt1
+for(int a7 = 0; a7<gs; a7++)
+{
+  for(int b7 = 0; b7<gs; b7++)
+  {
+    //checking horizontal
+      if(check(a7,b7,symbol) == 1)
       {
-        count++;
-        if(count == length)
+        ch++;
+        if(ch == length)
         return 1;
       }
       else
-      count = 0;
+      ch = 0;
+      //checking vertical
+      if(check(b7,a7,symbol) == 1)
+        {
+        cv++;
+        if(cv == length)
+        return 1;
+        }
+      else
+      cv = 0;
     }
-}
-
-//checkvertical
-
-int count = 0;
-for(int a = 0; a<MaxGrid; a++)
-{
-  for(int b = 0; b<MaxGrid; b++)
-  {
-    if(check(col,row,symbol) == 1))
-      {
-      count++;
-      if(count == length)
-      return 1;
-      }
-    else
-    count = 0;
-  }
 }
 
 
 //check checkDiagonals
 count = 0;
 //attempt4
-int a = 0;
-for(int b = 0; b<MaxGrid; b++)
+int a9 = 0;
+for(int b9 = 0; b9<gs; b9++)
 {
-  a = 0;
-  while(a<MaxGrid)
+  a9 = 0;
+  while(a9<MaxGrid)
   {
-    if(check(row,col,symbol) == 1))
-
+    if(check(b9,a9,gs) == 1)
     count++;
   else
     count = 0;
-    a++;
+    a9++;
   }
-  if(count == winlength)
+  if(count == length)
   return 1;
 }
 
@@ -485,28 +567,41 @@ for(int b = 0; b<MaxGrid; b++)
 
 count = 0;
 //attempt4
-int a = 0;
-for(int b = 0; b<MaxGrid; b++)
+int a10 = 0;
+for(int b10 = 0; b10<gs; b10++)
 {
-  a = 0;
-  while(a<MaxGrid)
+  a10 = 0;
+  while(a10<gs)
   {
-    if(check(col,row,symbol) == 1))
-
+    if(check(a10,b10,symbol) == 1)
+    {
     count++;
-  else
-    count = 0;
-    a++;
   }
-  if(count == winlength)
-  return 1;
+    else
+    count = 0;
+    a10++;
+  }
 }
-
+if(count ==length || ch == length || cv == length)
+return 1;
 	return 0;
 }
-
+**/
 // IF YOU NEED ADDITIONAL FUNCTIONS YOU CAN DEFINE THEM BELOW THIS LINE
 //----------------------------------------------------------------------
+
+void startinggrid()
+{
+  for(int outloop = 0; outloop<gs;outloop++)
+  {
+    for(int inloop = 0; inloop<gs; inloop++)
+    {
+      grid[outloop][inloop]='.';
+    }
+  }
+}
+
+
 
 
 
@@ -518,51 +613,93 @@ for(int b = 0; b<MaxGrid; b++)
 int  main (int argc, char* argv[])
 {
 	// ENTER THE CODE OF YOUR main FUNCTION BELOW
-  int gs = 0,wl = 0; //variables to accept grid size and winning length
+  int wl = 0; //variables to accept grid size and winning length
+  gs = 0;
+  char symb;
+
+  int game =-10, r = 0, c = 0;
+  int g = 0; //to check if position is available
+  int win = 0; //to end game if a player has won
+  startinggrid();
   do
   {
     gs = 0; wl = 0;
-printf("Hi, please enter size of grid(3-10)");
-scanf("%i",&gs);
-printf("Hi, please enter length needed to win(3-%i)",gs);
-scanf("%i",&wl);
-newGame(gs,wl);
+    promptEnterGridSize();
+    scanf("%i",&gs);
+    promptEnterWinLength(gs);
+    scanf("%i",&wl);
+    newGame(gs,wl);
 
-}while(gs<3||gs<10||wl<0||ws<gl);
+}while(gs<3||gs>10||wl<3||wl>gs);
 
-printf("The game will start now, X plays first");
 
-int game = 0, r = 0, c =  0;
-int g = 0; //to check if position is available
-int win = 0; //to end game if a player has won
-while(boardisFull()==0 && win == 0)
+
+for(int k = 0; k<gs;k++)
 {
-    game++;
+  for(int l = 0; l<gs; l++)
+  {
+    grid[k][l] = '.';
+  }
+}
+
+printf("\nThe game will start now, Remember: X plays first\n");
+while(boardIsFull()==0 && win == 0)
+{
+  printf("nice2");
     showGrid();
-    do
-    {
-      g = 1;
-    printf("Please enter position choice (row,col)");
-    scanf("%i%i", &r, &c);
-    if(r<0||c<0||r>gs||c>gs)
+    game++;
     g = 0;
-    if(grid[r][c] != '.')
-    g = 0;
-  }while(g == 0);
+    if(game%2 == 0)
+      symb = 'X';
+    if(game%2 == 1)
+      symb = 'O';
 
-  if(game%2 == 0)
+    do
+      {
+        g = 1;
+        promptChooseLocation(symb);
+        scanf(" %i %i",&r,&c);
+        if(grid[r][c]!='.')
+          {
+            g = 0;
+            showErrTaken();
+          }
+        if(r<0||c<0||r>gs||c>gs)
+          {
+            g = 0;
+            showErrIndex();
+          }
+      }while(g==0);
+makeMove(r,c,symb);
+
+  if (effPlayerHasWon(r,c,symb,wl) == 1)
+    {
+      printf("nice");
+      showWinMessage(symb);
+      win = 1;
+    }
+
+if((boardIsFull()==1 )&& (win==0))
+  showGameOverMessage();
+
+}
+
+
+char pbg, noe; //playbackgame and nextorexit
+do
 {
-  makeMove(r,c,'X');
-  if (effPlayerHasWon(r,c,'X',wl) == 1)
-  win = 1;
-}
-if(game%2 == 1)
-{
-makeMove(r,c,'O');
-if (effPlayerHasWon(r,c,'O',wl) == 1)
-win = 1;
-}
-}
+  promptPlayBackGame();
+  scanf(" %c", &pbg);
+  promptNextOrExit();
+  scanf(" %c", &noe);
+  if(noe == 'e')
+  exit(0);
+} while(noe == 'n');
+
+
+promptPlayBackGame();
+
+
 
 // DON'T CHANGE THE FOLLOWING 3 LINES
   return 0;
