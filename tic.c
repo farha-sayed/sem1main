@@ -118,6 +118,8 @@ int peek (int row, int col)
 
 
 int gs = 0;
+int ar = 0;
+
 
 
 // END OF SECTION FOR DECLARRING ADDITIONAL GLOBAL VARIABLES
@@ -327,35 +329,6 @@ for(int b5 = 0; b5<MaxGrid; b5++)
   }
 }
 
-
-/**
-//attempt3 i think it should work but lets try diff method in attempt4
-int c = 0,d=0;
-for(int a = 0;a<MaxGrid;a++)
-{
-  c = a, b = d;
-  for(int b = 0; b<MaxGrid; b++)
-  {
-    while(count < winlength)
-    {
-    while(c<MaxGrid && d<MaxGrid)
-    {
-    if(grid[c][d] == symbol)
-    count++;
-    if(grid[c][d] != symbol)
-    count = 0;
-    c++;
-    d++;
-  }
-  }
-  if(count == winlength)
-  return 1;
-  }
-
-}
-**/
-
-
 return 0;
 }
 
@@ -533,6 +506,34 @@ void startinggrid()
   }
 }
 
+
+
+
+
+void playback(int arow[],int acol[])
+{
+  char noe; //playbackgame and nextorexit
+  startinggrid();
+
+    for(int arr = 0; arr<=ar; arr++)
+      {
+        if(arr%2 == 0)
+        {
+          makeMove(arow[arr],acol[arr],'X');
+        }
+        if(arr%2 != 0)
+        {
+      makeMove(arow[arr],acol[arr],'O');
+        }
+      showGrid();
+      promptNextOrExit();
+      scanf(" %c", &noe);
+      if(noe == 'e')
+      exit(0);
+
+    }
+}
+
 // DON'T CHANGE THE FOLLOWING 3 LINES
 #ifndef TEST
 int  main (int argc, char* argv[])
@@ -562,6 +563,7 @@ int ephw = 0;
 
   startinggrid();
 int arrow[gs*gs],arcol[gs*gs];
+ar = -1;
 
   while((game<(gs*gs)) && win == 0)
     {
@@ -576,9 +578,12 @@ int arrow[gs*gs],arcol[gs*gs];
 
     do
       {
+        ar++;
         g = 1;
         promptChooseLocation(symb);
         scanf("%i,%i" ,&rowe , &cole );
+        arrow[ar] = rowe;
+        arcol[ar] = cole;
         if(grid[rowe][cole]=='X'||grid[rowe][cole]=='O')
           {
             g = 0;
@@ -603,18 +608,13 @@ if((boardIsFull()==1 )&& (win==0))
 }
 
 
-char pbg, noe; //playbackgame and nextorexit
-do
-{
-  promptPlayBackGame();
-  scanf(" %c", &pbg);
-  promptNextOrExit();
-  scanf(" %c", &noe);
-  if(noe == 'e')
-  exit(0);
-} while(noe == 'n');
-
+char pbg;
 promptPlayBackGame();
+scanf(" %c", &pbg);
+if(pbg =='y')
+playback(arrow,arcol);
+else
+exit(0);
 
 
 
