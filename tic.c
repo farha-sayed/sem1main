@@ -181,7 +181,7 @@ for(int a1 = 0; a1<gs; a1++)
     printf("%i\t",a1);
   for(int b1 = 0; b1<gs; b1++)
     {
-        printf(" %c",grid[a1][b1]);
+        printf("%c ",grid[a1][b1]);
     }
   printf("\n");
   }
@@ -510,28 +510,46 @@ void startinggrid()
 
 
 
-void playback(int arow[],int acol[])
+void playback(int arow[],int acol[], int wo)
 {
   char noe; //playbackgame and nextorexit
   startinggrid();
 
+  showGrid();
+  promptNextOrExit();
+  scanf(" %c", &noe);
+  if(noe == 'e')
+  exit(0);
+
     for(int arr = 0; arr<=ar; arr++)
-      {
+    {
         if(arr%2 == 0)
         {
           makeMove(arow[arr],acol[arr],'X');
         }
-        if(arr%2 != 0)
+        if(arr%2 == 1)
         {
-      makeMove(arow[arr],acol[arr],'O');
+          makeMove(arow[arr],acol[arr],'O');
         }
-      showGrid();
-      promptNextOrExit();
-      scanf(" %c", &noe);
-      if(noe == 'e')
-      exit(0);
+        
+        showGrid();
+      if((boardIsFull()==1 )&&(wo==0))
+      {
+        exit(0);
+      }
+      else{
+        if(arr+1<=ar)
+        {
+          promptNextOrExit();
+          scanf(" %c", &noe);
+          if(noe == 'e')
+          exit(0);
 
     }
+
+}
+
+}
 }
 
 // DON'T CHANGE THE FOLLOWING 3 LINES
@@ -574,10 +592,7 @@ ar = -1;
       symb = 'X';
     if(game%2 == 1)
       symb = 'O';
-
-
-    do
-      {
+      do {
         ar++;
         g = 1;
         promptChooseLocation(symb);
@@ -587,14 +602,18 @@ ar = -1;
         if(grid[rowe][cole]=='X'||grid[rowe][cole]=='O')
           {
             g = 0;
+            ar--;
             showErrTaken();
           }
-        if(rowe<0||cole<0||rowe>gs||cole>gs)
+        if(rowe<0||cole<0||rowe>=gs||cole>=gs)
           {
             g = 0;
+            ar--;
             showErrIndex();
           }
       }while(g==0);
+
+
       mm = makeMove(rowe,cole,symb);
       ephw = effPlayerHasWon(rowe,cole,symb,wl);
       if(ephw ==1)
@@ -603,8 +622,12 @@ ar = -1;
       showWinMessage(symb);
       win = 1;
     }
-if((boardIsFull()==1 )&& (win==0))
+if((boardIsFull()==1 )&&(win==0))
+{
+  showGrid();
   showGameOverMessage();
+  break;
+}
 }
 
 
@@ -612,7 +635,7 @@ char pbg;
 promptPlayBackGame();
 scanf(" %c", &pbg);
 if(pbg =='y')
-playback(arrow,arcol);
+playback(arrow,arcol,win);
 else
 exit(0);
 
