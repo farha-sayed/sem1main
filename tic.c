@@ -170,12 +170,12 @@ int newGame (int gridsize, int winlength)
 void showGrid ()
 {
   printf("\n");
-printf("\t ");
+printf("\t");
 for(int j = 0; j< gs; j++)
 {
   printf("%i ", j);
 }
-printf("\n");
+printf("\n\n");
 for(int a1 = 0; a1<gs; a1++)
   {
     printf("%i\t",a1);
