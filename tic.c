@@ -470,39 +470,44 @@ for(int n = 0; n<gs; n++)
   cv = 0;
 }
 //checking diagonals
-for(int o = row,u = col; o<gs; o++)
+int ow = row-1, oow = row+1, uw = col-1, uuw = col+1;
+if(check(row+1,col+1,symbol)!=1 || check(row-1,col-1,symbol)!=1)
+cd = 0;
+else
 {
-  while(u<gs)
+  {
+    while(ow>=0&&uw>=0&&oow<gs&&uuw<gs)
     {
-      if(check(o,u,symbol)==1)
+      if(check(ow,uw,symbol)==1)
       {
         cd++;
         if(cd == length)
         return 1;
       }
       else
-  cd = 0;
-  u++;
-  }
-}
-if(cd == 0)
-{
-  for(int o = row,u = col; o>=0; o--)
-    {
-      while(u>=0)
-        {
-          if(check(o,u,symbol)==1)
-          {
-            cd++;
-            if(cd == length)
-            return 1;
-          }
-          else
-          cd = 0;
-          u--;
-        }
+      cd = 0;
+      if(check(oow,uuw,symbol)==1)
+      {
+        if(cd == length)
+        return 1;
+        cd++;
+      }
+      else
+      cd = 0;
+      ow--;
+      uw--;
+      oow++;
+      uuw++;
     }
+
 }
+}
+
+
+
+
+
+
 //checking antidiagonals
 /**
 while(w>0)
@@ -521,7 +526,7 @@ w--;
 }
 }
 **/
-if(cv ==length || ch == length|| cd == length )//|| cad == length)
+if(cv ==length || ch == length|| cd == length)//|| cad == length)
 return 1;
 else
 return 0;
@@ -599,8 +604,8 @@ for(int b10 = 0; b10<gs; b10++)
 if(count ==length || ch == length || cv == length)
 return 1;
 	return 0;
-}
-**/
+}**/
+
 // IF YOU NEED ADDITIONAL FUNCTIONS YOU CAN DEFINE THEM BELOW THIS LINE
 //----------------------------------------------------------------------
 
@@ -675,6 +680,7 @@ int ephw = 0;
       printf("\n");
       if(ephw ==1)
     {
+      showGrid();
       showWinMessage(symb);
       win = 1;
     }
