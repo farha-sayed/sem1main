@@ -470,142 +470,55 @@ for(int n = 0; n<gs; n++)
   cv = 0;
 }
 //checking diagonals
-int ow = row-1, oow = row+1, uw = col-1, uuw = col+1;
-if(check(row+1,col+1,symbol)!=1 || check(row-1,col-1,symbol)!=1)
-cd = 0;
-else
+
+int var = row, vac = col;
+while(var>=0&&vac>=0)
 {
-  {
-    while(ow>=0&&uw>=0&&oow<gs&&uuw<gs)
-    {
-      if(check(ow,uw,symbol)==1)
-      {
-        cd++;
-        if(cd == length)
-        return 1;
-      }
-      else
-      cd = 0;
-      if(check(oow,uuw,symbol)==1)
-      {
-        if(cd == length)
-        return 1;
-        cd++;
-      }
-      else
-      cd = 0;
-      ow--;
-      uw--;
-      oow++;
-      uuw++;
-    }
-
-}
+var--;
+vac--;
 }
 
-
-
-
+while(var<gs&&vac<gs)
+{
+if(check(var,vac,symbol)==1)
+cd++;
+else
+cd = 0;
+var++;
+vac++;
+if(cd==length)
+return 1;
+}
 
 
 //checking antidiagonals
-/**
-while(w>0)
+
+
+int varad = row, vacad = col;
+while(varad>=0&&vacad<gs)
 {
-for(int v = 0,w = gs; v<gs; v++)
-{
-  if(check(v,w,symbol)==1)
-{
-  cad++;
-  if(cad == length)
-  return 1;
+varad--;
+vacad++;
 }
+
+while(varad<gs&&vacad>=0)
+{
+if(check(varad,vacad,symbol)==1)
+cad++;
 else
 cad = 0;
-w--;
+varad++;
+vacad--;
+if(cad==length)
+return 1;
 }
-}
-**/
-if(cv ==length || ch == length|| cd == length)//|| cad == length)
+
+
+if(cv ==length || ch == length|| cd == length|| cad == length)
 return 1;
 else
 return 0;
 }
-
-
-
-
-/**
-//attempt1
-for(int a7 = 0; a7<gs; a7++)
-{
-  for(int b7 = 0; b7<gs; b7++)
-  {
-    //checking horizontal
-      if(check(a7,b7,symbol) == 1)
-      {
-        ch++;
-        if(ch == length)
-        return 1;
-      }
-      else
-      ch = 0;
-      //checking vertical
-      if(check(b7,a7,symbol) == 1)
-        {
-        cv++;
-        if(cv == length)
-        return 1;
-        }
-      else
-      cv = 0;
-    }
-}
-
-
-//check checkDiagonals
-count = 0;
-//attempt4
-int a9 = 0;
-for(int b9 = 0; b9<gs; b9++)
-{
-  a9 = 0;
-  while(a9<MaxGrid)
-  {
-    if(check(b9,a9,gs) == 1)
-    count++;
-  else
-    count = 0;
-    a9++;
-  }
-  if(count == length)
-  return 1;
-}
-
-//checkAntiDiagonals
-
-count = 0;
-//attempt4
-int a10 = 0;
-for(int b10 = 0; b10<gs; b10++)
-{
-  a10 = 0;
-  while(a10<gs)
-  {
-    if(check(a10,b10,symbol) == 1)
-    {
-    count++;
-  }
-    else
-    count = 0;
-    a10++;
-  }
-}
-if(count ==length || ch == length || cv == length)
-return 1;
-	return 0;
-}**/
-
 // IF YOU NEED ADDITIONAL FUNCTIONS YOU CAN DEFINE THEM BELOW THIS LINE
 //----------------------------------------------------------------------
 
@@ -648,6 +561,7 @@ int ephw = 0;
   }while(gs<3||gs>10||wl<3||wl>gs);
 
   startinggrid();
+int arrow[gs*gs],arcol[gs*gs];
 
   while((game<(gs*gs)) && win == 0)
     {
@@ -658,6 +572,7 @@ int ephw = 0;
       symb = 'X';
     if(game%2 == 1)
       symb = 'O';
+
 
     do
       {
@@ -677,17 +592,14 @@ int ephw = 0;
       }while(g==0);
       mm = makeMove(rowe,cole,symb);
       ephw = effPlayerHasWon(rowe,cole,symb,wl);
-      printf("\n");
       if(ephw ==1)
     {
       showGrid();
       showWinMessage(symb);
       win = 1;
     }
-printf("\n");
 if((boardIsFull()==1 )&& (win==0))
   showGameOverMessage();
-printf("\n");
 }
 
 
@@ -701,7 +613,6 @@ do
   if(noe == 'e')
   exit(0);
 } while(noe == 'n');
-
 
 promptPlayBackGame();
 
