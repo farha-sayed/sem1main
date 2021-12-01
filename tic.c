@@ -140,7 +140,6 @@ int gs = 0;
 // If everything is correct the function returns 1 indicating success in initialising the game.
 int newGame (int gridsize, int winlength)
 {
-  printf("Welcome to a new tic tac toe game!");
   //checking if gridsize is within appropriate bounds
   if(gridsize<3 || gridsize>10)
   {
@@ -201,14 +200,13 @@ for(int a1 = 0; a1<gs; a1++)
 // my solution is 4 lines only
 int makeMove(int row, int col, char symbol)
 {
-  if(row<0||row>MaxGrid||col<0||col>MaxGrid ||grid[row][col]!='.')
+  if(row<0||row>gs||col<0||col>gs ||grid[row][col]!='.')
   return 0;
   if (symbol=='X'||symbol=='O')
   {
   grid[row][col] = symbol;
   return 1;
-}
-return 0;
+  }
 }
 
 // This function is used to check if the board is full, i.e. every location in the grid is filled with either X or O
@@ -434,10 +432,11 @@ int playerHasWon (char symbol , int length)
 // It returns -1 if any of the parameters have an invalid value.
 int effPlayerHasWon (int row, int col, char symbol , int length)
 {
+  printf("a");
   int u = 0, w = 0;
   if(row<0||row>gs||col<0||col>gs||length<3||length>gs)
   return -1;
-  if(symbol!= 'X'&&symbol!='O')
+  if((symbol!= 'X') && symbol!='O')
   return -1;
   int f = 0; //check variable
 int count = 0;
@@ -510,6 +509,7 @@ w--;
 
 if(cd ==length || ch == length || cv == length || cad == length)
 return 1;
+else
 return 0;
 }
 
@@ -592,21 +592,14 @@ return 1;
 
 void startinggrid()
 {
-  for(int outloop = 0; outloop<gs;outloop++)
+  for(int ol = 0; ol<gs;ol++)
   {
-    for(int inloop = 0; inloop<gs; inloop++)
+    for(int il = 0; il<gs; il++)
     {
-      grid[outloop][inloop]='.';
+      grid[ol][il]='.';
     }
   }
 }
-
-
-
-
-
-
-
 
 // DON'T CHANGE THE FOLLOWING 3 LINES
 #ifndef TEST
@@ -616,11 +609,14 @@ int  main (int argc, char* argv[])
   int wl = 0; //variables to accept grid size and winning length
   gs = 0;
   char symb;
-
-  int game =-10, r = 0, c = 0;
+  int mm = 0;//makemove
+  int game =-1;
+  int rowe = 0;
+  int cole= 0;//rowe and cole to store row and col
   int g = 0; //to check if position is available
   int win = 0; //to end game if a player has won
-  startinggrid();
+int ephw = 0;
+
   do
   {
     gs = 0; wl = 0;
@@ -630,25 +626,15 @@ int  main (int argc, char* argv[])
     scanf("%i",&wl);
     newGame(gs,wl);
 
-}while(gs<3||gs>10||wl<3||wl>gs);
+  }while(gs<3||gs>10||wl<3||wl>gs);
 
+  startinggrid();
 
-
-for(int k = 0; k<gs;k++)
-{
-  for(int l = 0; l<gs; l++)
-  {
-    grid[k][l] = '.';
-  }
-}
-
-printf("\nThe game will start now, Remember: X plays first\n");
-while(boardIsFull()==0 && win == 0)
-{
-  printf("nice2");
-    showGrid();
-    game++;
-    g = 0;
+  while((game<(gs*gs)) && win == 0)
+    {
+      showGrid();
+      game++;
+      g = 0;
     if(game%2 == 0)
       symb = 'X';
     if(game%2 == 1)
@@ -658,30 +644,31 @@ while(boardIsFull()==0 && win == 0)
       {
         g = 1;
         promptChooseLocation(symb);
-        scanf(" %i %i",&r,&c);
-        if(grid[r][c]!='.')
+        scanf("%i,%i" ,&rowe , &cole );
+        if(grid[rowe][cole]=='X'||grid[rowe][cole]=='O')
           {
             g = 0;
             showErrTaken();
           }
-        if(r<0||c<0||r>gs||c>gs)
+        if(rowe<0||cole<0||rowe>gs||cole>gs)
           {
             g = 0;
             showErrIndex();
           }
       }while(g==0);
-makeMove(r,c,symb);
-
-  if (effPlayerHasWon(r,c,symb,wl) == 1)
+      mm = makeMove(rowe,cole,symb);
+      ephw = effPlayerHasWon(rowe,cole,symb,wl);
+      if(ephw ==1)
     {
-      printf("nice");
       showWinMessage(symb);
       win = 1;
     }
-
-if((boardIsFull()==1 )&& (win==0))
+printf("a\n");
+//if((boardIsFull()==1 )&& (win==0))
+if(g==1)
   showGameOverMessage();
-
+printf("nice3");
+printf("\n");
 }
 
 
