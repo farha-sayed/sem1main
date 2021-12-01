@@ -200,13 +200,13 @@ for(int a1 = 0; a1<gs; a1++)
 // my solution is 4 lines only
 int makeMove(int row, int col, char symbol)
 {
-  if(row<0||row>gs||col<0||col>gs ||grid[row][col]!='.')
-  return 0;
-  if (symbol=='X'||symbol=='O')
+  if (row>=0&&row<gs&&col>=0&&col<gs&&grid[row][col]=='.'&&(symbol=='X'||symbol=='O'))
   {
-  grid[row][col] = symbol;
-  return 1;
+    grid[row][col] = symbol;
+    return 1;
   }
+  else
+  return 0;
 }
 
 // This function is used to check if the board is full, i.e. every location in the grid is filled with either X or O
@@ -432,20 +432,16 @@ int playerHasWon (char symbol , int length)
 // It returns -1 if any of the parameters have an invalid value.
 int effPlayerHasWon (int row, int col, char symbol , int length)
 {
-  printf("a");
   int u = 0, w = 0;
   if(row<0||row>gs||col<0||col>gs||length<3||length>gs)
   return -1;
-  if((symbol!= 'X') && symbol!='O')
-  return -1;
   int f = 0; //check variable
-int count = 0;
-int ch = 0, cv = 0; //count horizontal and count vertical
-int cd = 0;
-int cad = 0;
-
-ch = 0;
-cv = 0;
+  int count = 0;
+  int ch,cv; //count horizontal and count vertical
+  int cd = 0;
+  int cad = 0;
+  ch = 0;
+  cv = 0;
 
 //attempt2
 
@@ -453,13 +449,13 @@ cv = 0;
 for(int m = 0; m<gs; m++)
   {
     if(check(row,m,symbol)==1)
-    {
-    ch++;
-if(ch == length)
-return 1;
-  }
+      {
+        ch++;
+          if(ch == length)
+          return 1;
+        }
     else
-    ch = 0;
+      ch = 0;
 }
 //checking vertical
 for(int n = 0; n<gs; n++)
@@ -474,23 +470,41 @@ for(int n = 0; n<gs; n++)
   cv = 0;
 }
 //checking diagonals
-while(u<gs)
+for(int o = row,u = col; o<gs; o++)
 {
-for(int o = 0,u = 0; o<gs; o++)
-{
-  if(check(o,u,symbol)==1)
-{
-
-  cd++;
-  if(cd == length)
-  return 1;
+  while(u<gs)
+    {
+      if(check(o,u,symbol)==1)
+      {
+        cd++;
+        if(cd == length)
+        return 1;
+      }
+      else
+  cd = 0;
+  u++;
+  }
 }
-else
-cd = 0;
-u++;
-}
+if(cd == 0)
+{
+  for(int o = row,u = col; o>=0; o--)
+    {
+      while(u>=0)
+        {
+          if(check(o,u,symbol)==1)
+          {
+            cd++;
+            if(cd == length)
+            return 1;
+          }
+          else
+          cd = 0;
+          u--;
+        }
+    }
 }
 //checking antidiagonals
+/**
 while(w>0)
 {
 for(int v = 0,w = gs; v<gs; v++)
@@ -506,8 +520,8 @@ cad = 0;
 w--;
 }
 }
-
-if(cd ==length || ch == length || cv == length || cad == length)
+**/
+if(cv ==length || ch == length|| cd == length )//|| cad == length)
 return 1;
 else
 return 0;
@@ -658,16 +672,15 @@ int ephw = 0;
       }while(g==0);
       mm = makeMove(rowe,cole,symb);
       ephw = effPlayerHasWon(rowe,cole,symb,wl);
+      printf("\n");
       if(ephw ==1)
     {
       showWinMessage(symb);
       win = 1;
     }
-printf("a\n");
-//if((boardIsFull()==1 )&& (win==0))
-if(g==1)
+printf("\n");
+if((boardIsFull()==1 )&& (win==0))
   showGameOverMessage();
-printf("nice3");
 printf("\n");
 }
 
